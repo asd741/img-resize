@@ -1,50 +1,49 @@
-//alert("成功引入ing-resize套件");
-console.log("成功引入ing-resize套件");
+const imageResizeCanvas = document.createElement('CANVAS');
+const imageResizeCtx = imageResizeCanvas.getContext('2d');
+let imagePixels = [];
+// _function是給user調用的接口，開發者自己使用的function命名不需要底線
 
-let image_resize_canvas = document.createElement("CANVAS");;
-let image_resize_ctx = image_resize_canvas.getContext("2d");
-let canvas_Array = new Array();
+function _setImage(img) {
+    /**
+     * @param { HTMLImageElement } img
+     */
+    imageResizeCanvas.width = img.width;
+    imageResizeCanvas.height = img.height;
+    imageResizeCtx.drawImage(img, 0, 0);
+    const { width, height } = imageResizeCanvas;
+    const { data } = imageResizeCtx.getImageData(0, 0, width, height);
 
-function input_image(input) {
-    image_resize_canvas.width = input.width;
-    image_resize_canvas.height = input.height;
-    image_resize_ctx.drawImage(img, 0, 0);
-    let imageData = image_resize_ctx.getImageData(0, 0, image_resize_canvas.width, image_resize_canvas.height).data;
-    canvas_Array = new Array(image_resize_canvas.height);
-    for (var i = 0; i < image_resize_canvas.height; i++) {
-        canvas_Array[i] = new Uint8ClampedArray(image_resize_canvas.width * 4);
-        for (var j = 0; j < image_resize_canvas.width * 4; j += 4) {
-            canvas_Array[i][j] = imageData[i * image_resize_canvas.width * 4 + j];
-            canvas_Array[i][j + 1] = imageData[i * image_resize_canvas.width * 4 + j + 1];
-            canvas_Array[i][j + 2] = imageData[i * image_resize_canvas.width * 4 + j + 2];
-            canvas_Array[i][j + 3] = imageData[i * image_resize_canvas.width * 4 + j + 3];
+    imagePixels = new Array(imageResizeCanvas.height);
+    for (let i = 0; i < imageResizeCanvas.height; i += 1) {
+        imagePixels[i] = new Uint8ClampedArray(imageResizeCanvas.width * 4);
+        for (let j = 0; j < imageResizeCanvas.width * 4; j += 4) {
+            imagePixels[i][j] = data[i * imageResizeCanvas.width * 4 + j];
+            imagePixels[i][j + 1] = data[i * imageResizeCanvas.width * 4 + j + 1];
+            imagePixels[i][j + 2] = data[i * imageResizeCanvas.width * 4 + j + 2];
+            imagePixels[i][j + 3] = data[i * imageResizeCanvas.width * 4 + j + 3];
         }
     }
-    console.log(canvas_Array);
 }
 
-function get_image() {
-    let imageData = image_resize_ctx.getImageData(0, 0, image_resize_canvas.width, image_resize_canvas.height);
-    for (var i = 0; i < image_resize_canvas.height; i++) {
-        for (var j = 0; j < image_resize_canvas.width * 4; j += 4) {
-            imageData.data[i * image_resize_canvas.width * 4 + j] = canvas_Array[i][j];
-            imageData.data[i * image_resize_canvas.width * 4 + j + 1] = canvas_Array[i][j + 1];
-            imageData.data[i * image_resize_canvas.width * 4 + j + 2] = canvas_Array[i][j + 2];
-            imageData.data[i * image_resize_canvas.width * 4 + j + 3] = canvas_Array[i][j + 3];
-        }
-    }
-    image_resize_ctx.putImageData(imageData, 0, 0);
-    return image_resize_canvas.toDataURL();
-}
+function _getImageSrc() {
+    const { width, height } = imageResizeCanvas;
+    const imageData = imageResizeCtx.getImageData(0, 0, width, height);
 
-function color_inverse() {
-    for (var i = 0; i < image_resize_canvas.height; i++) {
-        for (var j = 0; j < image_resize_canvas.width * 4; j += 4) {
-            canvas_Array[i][j] = 255 - canvas_Array[i][j];
-            canvas_Array[i][j + 1] = 255 - canvas_Array[i][j + 1];
-            canvas_Array[i][j + 2] = 255 - canvas_Array[i][j + 2];
+    for (let i = 0; i < imageResizeCanvas.height; i += 1) {
+        for (let j = 0; j < imageResizeCanvas.width * 4; j += 4) {
+            imageData.data[i * imageResizeCanvas.width * 4 + j] = imagePixels[i][j];
+            imageData.data[i * imageResizeCanvas.width * 4 + j + 1] = imagePixels[i][j + 1];
+            imageData.data[i * imageResizeCanvas.width * 4 + j + 2] = imagePixels[i][j + 2];
+            imageData.data[i * imageResizeCanvas.width * 4 + j + 3] = imagePixels[i][j + 3];
         }
     }
 
-
+    imageResizeCtx.putImageData(imageData, 0, 0);
+    return imageResizeCanvas.toDataURL();
 }
+
+window.onload = () => {
+    const oImg = document.getElementById('img');
+    _setImage(oImg);
+    oImg.src = _getImageSrc();
+};

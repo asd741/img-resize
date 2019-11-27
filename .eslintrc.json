@@ -1,0 +1,25 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true
+    },
+    "extends": [
+        "airbnb-base"
+    ],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+    "parserOptions": {
+        "ecmaVersion": 2018,
+        "sourceType": "module"
+    },
+    "rules": {
+        "no-underscore-dangle": "off",//允許命名函數可以有底線
+        "linebreak-style": [ //忽略換行規則
+            "error",
+            "windows"
+        ],
+        "indent": "off" //忽略縮排規則
+    }
+}
