@@ -42,6 +42,10 @@ function _getImageSrc() {
     return imageResizeCanvas.toDataURL();
 }
 
+function getImgToBase64(){
+    console.log('= =');
+}
+
 window.onload = () => {
     const oImg = document.getElementById('img');
     _setImage(oImg);
