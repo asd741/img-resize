@@ -1,3 +1,4 @@
+import {Base64} from './utily.js';
 const imageResizeCanvas = document.createElement('CANVAS');
 const imageResizeCtx = imageResizeCanvas.getContext('2d');
 let imagePixels = [];
@@ -42,13 +43,19 @@ function _getImageSrc() {
     return imageResizeCanvas.toDataURL();
 }
 
-function getImgToBase64(){
-    console.log('= =');
+//= =
+function getImgToBase64(src) {
+    /**
+     * @param { String } src
+     * @return { String } base64Src
+     */
+    const base64Src = Base64.encode(src);;
+    return "data:image/png;base64,"+base64Src;
 }
 
 window.onload = () => {
     const oImg = document.getElementById('img');
     _setImage(oImg);
     oImg.src = _getImageSrc();
-    console.log('sdoakfodkoadskcoakocasodckasodkfoaskosakfoadskfoasdkfo');
+    //console.log(getImgToBase64('https://1.bp.blogspot.com/-80mxDulgkY4/Xdk5oakh-1I/AAAAAAAACig/mbl41jpt4LU7wqzhOmXclvWb2CvuiWPwACLcBGAsYHQ/s1600/gaugan_output%2B%252844%2529.jpg'));
 };
