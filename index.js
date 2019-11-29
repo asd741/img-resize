@@ -46,4 +46,5 @@ window.onload = () => {
     const oImg = document.getElementById('img');
     _setImage(oImg);
     oImg.src = _getImageSrc();
+    console.log('sdoakfodkoadskcoakocasodckasodkfoaskosakfoadskfoasdkfo');
 };
